@@ -1,16 +1,61 @@
-# React + Vite
+# «Путь к успеху» — изображения, адаптив, анимации и дедлайн
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Готовый запускаемый React/Vite-проект и набор файлов для переноса в существующий сайт.
 
-Currently, two official plugins are available:
+## Что сделано
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Все приложенные PNG (включая `logo.png`) подключены статическими импортами из `src/assets` (`src/assets.js`).
+- Шапка (`.header`), подвал (`.footer`) и чёрные секции (`.black`) идут **впритык к краям страницы** на любых ширинах экрана (включая широкие мониторы >1440 px и телефоны), без внешних белых полей вокруг них; на коротких внутренних страницах подвал прижат к нижнему краю окна.
+- Первый экран (`Hero.jsx`): жёлтая (`yellow.png`) и красная (`red.png`) совы из десктопного макета, а позади них — светлая пунктирная кривая по траектории макета.
+- Выпадающие списки классов (`.dd`), вопросы FAQ (`.q`) и мобильное меню раскрываются и сворачиваются **плавно** (`SmoothDetails.jsx` + CSS-переходы). В блоке «Направления олимпиады» прописаны предметы из макета: **История**, **Литература**, **Трехмерное моделирование. Parametric**, **Экология. БЖД**.
+- Картинка с бегущей совой (`run.png` в `Steps.jsx`) разделена по `clip-path` на саму сову, пунктирную дорожку и звезду `#1`: сова плавно анимирована в беге и при наведении подаётся вперёд по дорожке, а звезда `#1` мягко пульсирует и откликается на наведение (сама дорожка остаётся на месте).
+- Добавлены плавные анимации при наведении для кнопок, стрелок, карточек преимуществ, шагов участия (плавная смена подписи без скачков), иллюстраций и ссылок, с учётом `prefers-reduced-motion`.
+- Карточки преимуществ: `wincooboc.png`, `pasle.png`, `gift.png`, `crutoi.png` в порядке десктопного макета; под шагами — `run.png`; в FAQ — `questhion.png`.
+- В заголовках (`.d`) подключён оригинальный акцидентный шрифт **VKHUTETYPE** (`src/assets/fonts/VKHUTETYPE.otf`), как в дизайн-системе макета (`H1 VKHUTETYPE 90`, `H2 VKHUTETYPE 72`).
+- В форме обратной связи (`Faq.jsx`): кнопка «Отправить заявку» сделана **такого же размера, как поля ввода** (`61px` на десктопе, `46px` на телефоне, во всю ширину), плейсхолдер второго поля — `Твой номер или телефон`, а под кнопкой добавлены два обязательных чекбокса ознакомления и согласия на обработку персональных данных (ФЗ №152-ФЗ).
+- Общий дедлайн в шапке и таймере: **01.11.2026** (`src/config.js`), таймер обновляется каждую секунду и не уходит в минус.
+- Убраны конфликтующие стили стартового шаблона Vite из `index.css` и `App.css`.
 
-## React Compiler
+## Быстрый запуск отдельно
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Сборка для продакшена:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm run build
+npm run preview
+```
+
+## Как перенести изменения в ваш существующий проект
+
+В `src/data.js` в массиве `directions` уже указаны предметы из макета (`История`, `Литература`, `Трехмерное моделирование. Parametric`, `Экология. БЖД`). Перенесите `src/data.js` (либо обновите массив `directions` в вашем `data.js`, если новости и FAQ у вас уже заполнены реальными текстами).
+
+Скопируйте/обновите в вашем проекте:
+- `src/assets/` — все PNG (`logo.png`, `yellow.png`, `red.png`, `wincooboc.png`, `pasle.png`, `gift.png`, `crutoi.png`, `run.png`, `questhion.png`) и `src/assets/fonts/`;
+- `src/assets.js`;
+- `src/config.js`;
+- `src/data.js` (или массив `directions` из него);
+- `src/components/ActionLink.jsx`;
+- `src/components/SmoothDetails.jsx`;
+- `src/components/Header.jsx`;
+- `src/components/Hero.jsx`;
+- `src/components/About.jsx`;
+- `src/components/Benefits.jsx`;
+- `src/components/Steps.jsx`;
+- `src/components/Faq.jsx`;
+- `src/styles.css`, `src/fonts.css`, `src/index.css`, `src/App.css`.
+
+В `App.jsx` убедитесь, что корневой контейнер имеет класс `.page` (`<div className="page">`), а контент страниц обёрнут в `<main>`.
+
+### Имя файла логотипа
+
+В архиве логотип сохранён как `src/assets/logo.png` и импортируется в `src/assets.js`. Если в вашей папке `src/assets` он называется иначе, поменяйте имя файла в первой строке `src/assets.js` (или переименуйте файл в `logo.png`).
+
+### Настройка ссылок, шрифта и формы перед публикацией
+
+- В `src/config.js` укажите рабочие URL в объекте `LINKS` (включая `personalDataPolicy` и `privacyPolicy` для ссылок на политики) и серверный маршрут в `CONTACT_ENDPOINT` для отправки формы.
+- Для заголовков уже подключён локальный шрифт **VKHUTETYPE** (`src/assets/fonts/VKHUTETYPE.otf`), а для основного текста — **Montserrat** (`src/assets/fonts/montserrat-*.ttf`).
