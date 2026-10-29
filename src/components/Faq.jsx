@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { faq } from '../data';
 import { artwork } from '../assets';
 import { CONTACT_ENDPOINT, LINKS } from '../config';
@@ -6,12 +7,14 @@ import ActionLink from './ActionLink';
 import SmoothDetails from './SmoothDetails';
 
 function PolicyRef({ href, children }) {
-  return href ? (
+  if (!href) return <span className="policy-text">{children}</span>;
+  if (href.startsWith('/') && !href.startsWith('//')) {
+    return <Link className="policy-link" to={href}>{children}</Link>;
+  }
+  return (
     <a className="policy-link" href={href} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
-  ) : (
-    <span className="policy-text">{children}</span>
   );
 }
 
@@ -30,13 +33,14 @@ export default function Faq() {
       return;
     }
     if (!readPolicy || !agreePolicy) {
-      setStatus('Подтвердите ознакомление и согласие на обработку персональных данных.');
+      setStatus('Подтвердите ознакомление с документами и согласие на обработку данных.');
       return;
     }
     if (!CONTACT_ENDPOINT) {
-      setStatus('Онлайн-отправка пока не подключена. Позвоните: 8 (800) 100-19-34.');
+      setStatus('Онлайн-отправка пока недоступна. Позвоните нам: 8 (800) 100-19-34.');
       return;
     }
+
     setBusy(true);
     setStatus('');
     try {
@@ -48,6 +52,7 @@ export default function Faq() {
           phone: phone.trim(),
           readPolicy,
           agreePolicy,
+          submittedAt: new Date().toISOString(),
         }),
       });
       if (!r.ok) throw new Error();
@@ -95,7 +100,7 @@ export default function Faq() {
             maxLength={100}
           />
           <label className="sr-only" htmlFor="contact-phone">
-            Твой номер или телефон
+            Твой номер телефона
           </label>
           <input
             id="contact-phone"
@@ -103,15 +108,12 @@ export default function Faq() {
             type="tel"
             autoComplete="tel"
             inputMode="tel"
-            placeholder="Твой номер или телефон"
+            placeholder="Твой номер телефона"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
             maxLength={30}
           />
-          <button className="btn btn-o wide form-submit" disabled={busy} type="submit">
-            {busy ? 'Отправляем…' : 'Отправить заявку'}
-          </button>
 
           <div className="form-checks">
             <label className="form-check">
@@ -123,11 +125,9 @@ export default function Faq() {
               />
               <span className="check-box" aria-hidden="true" />
               <span>
-                Я подтверждаю ознакомление с{' '}
-                <PolicyRef href={LINKS.personalDataPolicy}>
-                  Политикой обработки и защиты персональных данных
-                </PolicyRef>{' '}
-                и <PolicyRef href={LINKS.privacyPolicy}>Политикой конфиденциальности</PolicyRef>.
+                Подтверждаю, что ознакомлен(а) с{' '}
+                <PolicyRef href={LINKS.privacyPolicy}>Политикой конфиденциальности</PolicyRef>{' '}
+                и <PolicyRef href={LINKS.personalDataPolicy}>Политикой обработки и защиты персональных данных</PolicyRef>.
               </span>
             </label>
 
@@ -140,12 +140,21 @@ export default function Faq() {
               />
               <span className="check-box" aria-hidden="true" />
               <span>
-                Я согласен с{' '}
-                <PolicyRef href={LINKS.personalDataPolicy}>Политикой обработки</PolicyRef> и{' '}
-                <PolicyRef href={LINKS.privacyPolicy}>Политикой конфиденциальности</PolicyRef>, а также даю согласие на обработку моих персональных данных согласно ФЗ №152-ФЗ.
+                Даю согласие ФГБОУ ВО «МГТУ им. Г.И. Носова» на обработку указанных мной имени и телефона для ответа на обращение. Подробности — в{' '}
+                <PolicyRef href={LINKS.personalDataPolicy}>Политике обработки и защиты персональных данных</PolicyRef>.
               </span>
             </label>
           </div>
+
+          {!CONTACT_ENDPOINT && (
+            <p className="form-connection-note" role="note">
+              Онлайн-отправка будет доступна после подключения защищённого сервера записи. Пока свяжитесь с нами по телефону 8 (800) 100-19-34.
+            </p>
+          )}
+
+          <button className="btn btn-o wide form-submit" disabled={busy || !readPolicy || !agreePolicy} type="submit">
+            {busy ? 'Отправляем…' : 'Отправить заявку'}
+          </button>
 
           {status && (
             <p className="form-status" role="status">

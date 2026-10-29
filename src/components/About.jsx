@@ -1,18 +1,8 @@
-import { useEffect, useState } from 'react';
 import { directions } from '../data';
-import { REGISTRATION_DEADLINE, LINKS } from '../config';
+import { LINKS } from '../config';
 import ActionLink from './ActionLink';
 import SmoothDetails from './SmoothDetails';
 import SectionGrid from './SectionGrid';
-
-export function timeLeft(now = Date.now()) {
-  const diff = Math.max(0, REGISTRATION_DEADLINE.getTime() - now);
-  return {
-    d: Math.floor(diff / 86400000),
-    h: Math.floor(diff / 3600000) % 24,
-    m: Math.floor(diff / 60000) % 60,
-  };
-}
 
 const stats = [
   ['18', 'направлений', 'var(--red)'],
@@ -22,17 +12,6 @@ const stats = [
 ];
 
 export default function About() {
-  const [t, setT] = useState(timeLeft);
-  useEffect(() => {
-    const tick = () => setT(timeLeft());
-    const id = setInterval(tick, 1000);
-    window.addEventListener('focus', tick);
-    return () => {
-      clearInterval(id);
-      window.removeEventListener('focus', tick);
-    };
-  }, []);
-
   return (
     <section className="black about" id="about">
       <h2 className="d h2">Об олимпиаде</h2>
@@ -63,11 +42,8 @@ export default function About() {
         </div>
       </div>
 
-      <p className="count red" role="timer">
-        До конца регистрации: {t.d} дней, {t.h} часов, {t.m} минут
-      </p>
 
-      <h2 className="d h2" id="directions">
+      <h2 className="d h2 about-directions-title" id="directions">
         Направления олимпиады
       </h2>
       <div className="classes">

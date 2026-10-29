@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import NewsPage from './pages/NewsPage';
 import NewsArticle from './pages/NewsArticle';
 import SectionPage from './pages/SectionPage';
+import LegalPage from './pages/LegalPage';
 
 export default function App() {
   const { pathname, hash } = useLocation();
@@ -27,6 +28,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/news/:id" element={<NewsArticle />} />
+        <Route path="/privacy-policy" element={<LegalPage kind="privacy" />} />
+        <Route path="/personal-data-policy" element={<LegalPage kind="personal" />} />
         <Route path="/sections/archive/:year" element={<SectionPage />} />
         <Route path="/sections/:slug" element={<SectionPage />} />
         <Route

@@ -1,7 +1,7 @@
 // Статические импорты из src/assets работают и в dev, и после vite build.
 import logo from './assets/logo.png';
 import vk from './assets/vk.png';
-import tg from './assets/tg.png';
+import max from './assets/max.png';
 import wincooboc from './assets/wincooboc.png';
 import yellow from './assets/yellow.png';
 import crutoi from './assets/crutoi.png';
@@ -15,7 +15,7 @@ import calendarPdf from './assets/docs/Prilozhenie_1_KP.pdf';
 export const artwork = {
   logo,
   vk,
-  tg,
+  max,
   wincooboc,
   yellow,
   crutoi,

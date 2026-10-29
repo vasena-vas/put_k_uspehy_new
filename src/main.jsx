@@ -4,11 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import './styles.css';
 import App from './App';
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* 👇 basename ОБЯЗАТЕЛЕН для работы роутера на GitHub Pages */}
-    <BrowserRouter basename="/put_k_uspehy/">
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </React.StrictMode>
